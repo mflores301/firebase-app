@@ -1,0 +1,14 @@
+{
+  "name": "firebase-app",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "build:frontend": "pnpm --filter frontend build",
+    "build:backend": "pnpm --filter backend build",
+    "start":"pnpm run build:backend && pnpm build:frontend && firebase emulators:start --only functions,firestore,storage,hosting",
+    "seed": "pnpm --filter backend seed"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
