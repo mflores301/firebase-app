@@ -1,0 +1,12 @@
+
+export enum UserActionTypes{
+    UPDATE_USER,
+    API_CALL_INIT,
+    API_CALL_END,
+    API_SET_ERROR,
+    SET_USERS_DATA,
+    SET_SELECTED_USER,
+    SET_DETAILS_MODAL,
+    SET_EDIT_MODAL,
+    UPDATE_SELECTED_USER
+}
