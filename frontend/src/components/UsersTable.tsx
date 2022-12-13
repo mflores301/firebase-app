@@ -1,6 +1,15 @@
 // external imports
 import { useContext, useEffect } from "react";
-import { Col, Dropdown, Pagination, Row, Table, Tooltip, User } from "@nextui-org/react";
+import {
+  Col,
+  Dropdown,
+  Loading,
+  Pagination,
+  Row,
+  Table,
+  Tooltip,
+  User,
+} from "@nextui-org/react";
 
 // internal imports
 //icons
@@ -34,16 +43,16 @@ const UsersTable = () => {
     });
   };
 
-  const handleChangePagination =  (page:number) =>{ 
+  const handleChangePagination = (page: number) => {
     dispatch({
       type: UserActionTypes.SET_PAGE,
-      payload: page
-    })
-  }
+      payload: page,
+    });
+  };
 
-  useEffect(()=>{
-    getUsersHandler(dispatch,state.pagination)
-  },[state.pagination.pageSize, state.pagination.page])
+  useEffect(() => {
+    getUsersHandler(dispatch, state.pagination);
+  }, [state.pagination.pageSize, state.pagination.page]);
 
   const tableRowRenderer = (user: IUser) => (
     <Table.Row key={user.id}>
@@ -95,7 +104,16 @@ const UsersTable = () => {
           <Dropdown.Item key="50">50</Dropdown.Item>
         </Dropdown.Menu>
       </Dropdown>
-      <Pagination color="secondary" total={state.pagination.size} css={{ mb: "$5" }} onChange={handleChangePagination} />
+      <Pagination
+        color="secondary"
+        total={state.pagination.size}
+        css={{ mb: "$5" }}
+        onChange={handleChangePagination}
+      />
+      {
+      state.loading && (
+        <Loading css={{ ml: "$5" }} type="default" size="sm" color="secondary" />
+      )}
       {!!state.users.length && (
         <Table
           bordered
