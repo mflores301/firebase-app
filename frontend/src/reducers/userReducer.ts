@@ -42,6 +42,31 @@ export const userReducer = (
         ...state,
         openEdit: action.payload,
       };
+    case UserActionTypes.SET_PAGE_SIZE:
+      return {
+        ...state,
+        pagination: {
+          ...state.pagination,
+          pageSize: action.payload,
+          page: 1
+        },
+      };
+    case UserActionTypes.SET_PAGE:
+      return {
+        ...state,
+        pagination: {
+          ...state.pagination,
+          page: action.payload,
+        },
+      };
+    case UserActionTypes.SET_PAGINATION_SIZE:
+        return {
+          ...state,
+          pagination: {
+            ...state.pagination,
+            size: action.payload,
+          }
+        }
     case UserActionTypes.UPDATE_USER:
       const index = state.users.findIndex(
         (user) => user.id === action.payload.id

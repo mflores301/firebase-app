@@ -22,7 +22,7 @@ export const DataProvider: FunctionComponent<ComponentProps> = ({
   const [state, dispatch] = useReducer(userReducer, INITIAL_STATE);
 
   useEffect(() => {
-    getUsersHandler(dispatch);
+    getUsersHandler(dispatch, state.pagination);
   }, []);
 
   return (

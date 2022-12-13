@@ -13,4 +13,7 @@ export type UserActions =
   | { type: UserActionTypes.SET_SELECTED_USER; payload: IUser }
   | { type: UserActionTypes.API_SET_ERROR; payload: boolean }
   | { type: UserActionTypes.SET_DETAILS_MODAL; payload: boolean }
-  | { type: UserActionTypes.SET_EDIT_MODAL; payload: boolean };
+  | { type: UserActionTypes.SET_EDIT_MODAL; payload: boolean }
+  | { type: UserActionTypes.SET_PAGE_SIZE; payload: number }
+  | { type: UserActionTypes.SET_PAGE; payload: number }
+  | { type: UserActionTypes.SET_PAGINATION_SIZE; payload: number };

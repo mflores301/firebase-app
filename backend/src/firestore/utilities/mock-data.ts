@@ -1,6 +1,6 @@
 // external imports
 import axios from "axios";
-import { v4 as uuidv4 } from "uuid";
+// import { v4 as uuidv4 } from "uuid";
 
 // types
 import { IUser } from "./interfaces/user";
@@ -20,8 +20,8 @@ export const getMockApiUsersData = async (): Promise<IUser[]> => {
     const request = await axios.get("https://dummyjson.com/users?limit=100");
     const data = request.data as IMockApiUser;
 
-    return data.users.map<IUser>((user) => ({
-      id: uuidv4(),
+    return data.users.map<IUser>((user, index) => ({
+      id: (index + 1),
       name: `${user.firstName} ${user.lastName}`,
       email: user.email,
       avatar: user.image,

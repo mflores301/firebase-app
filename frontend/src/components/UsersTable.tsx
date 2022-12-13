@@ -1,6 +1,6 @@
 // external imports
-import { useContext, useState } from "react";
-import { Col, Dropdown, Row, Table, Tooltip, User } from "@nextui-org/react";
+import { useContext, useEffect } from "react";
+import { Col, Dropdown, Pagination, Row, Table, Tooltip, User } from "@nextui-org/react";
 
 // internal imports
 //icons
@@ -12,10 +12,10 @@ import { IUser } from "../models/user";
 import { UserActionTypes } from "../constants/userActionsType";
 // context
 import { DataContext } from "../context/DataContext";
+import { getUsersHandler } from "../handlers/userRequest";
 
 const UsersTable = () => {
   const { state, dispatch } = useContext(DataContext);
-  const [pageSize, setPageSize] = useState<number>(10);
 
   const viewDetails = (user: IUser) => {
     dispatch({ type: UserActionTypes.SET_SELECTED_USER, payload: user });
@@ -26,6 +26,24 @@ const UsersTable = () => {
     dispatch({ type: UserActionTypes.SET_SELECTED_USER, payload: user });
     dispatch({ type: UserActionTypes.SET_EDIT_MODAL, payload: true });
   };
+
+  const handleChangePageSize = (pageSize: number) => {
+    dispatch({
+      type: UserActionTypes.SET_PAGE_SIZE,
+      payload: pageSize,
+    });
+  };
+
+  const handleChangePagination =  (page:number) =>{ 
+    dispatch({
+      type: UserActionTypes.SET_PAGE,
+      payload: page
+    })
+  }
+
+  useEffect(()=>{
+    getUsersHandler(dispatch,state.pagination)
+  },[state.pagination.pageSize, state.pagination.page])
 
   const tableRowRenderer = (user: IUser) => (
     <Table.Row key={user.id}>
@@ -60,21 +78,24 @@ const UsersTable = () => {
     <>
       <Dropdown>
         <Dropdown.Button color="secondary" flat css={{ mb: "$5" }}>
-          Display: {pageSize}
+          Display: {state.pagination.pageSize}
         </Dropdown.Button>
         <Dropdown.Menu
           aria-label="Single selection actions"
           color="secondary"
           disallowEmptySelection
           selectionMode="single"
-          selectedKeys={new Set([String(pageSize)])}
-          onSelectionChange={(keys: any) => setPageSize(+keys.currentKey)}
+          selectedKeys={new Set([String(state.pagination.pageSize)])}
+          onSelectionChange={(keys: any) =>
+            handleChangePageSize(+keys.currentKey)
+          }
         >
           <Dropdown.Item key="10">10</Dropdown.Item>
           <Dropdown.Item key="25">25</Dropdown.Item>
           <Dropdown.Item key="50">50</Dropdown.Item>
         </Dropdown.Menu>
       </Dropdown>
+      <Pagination color="secondary" total={state.pagination.size} css={{ mb: "$5" }} onChange={handleChangePagination} />
       {!!state.users.length && (
         <Table
           bordered
@@ -100,13 +121,6 @@ const UsersTable = () => {
           <Table.Body items={state.users}>
             {(user) => tableRowRenderer(user)}
           </Table.Body>
-          <Table.Pagination
-            shadow
-            noMargin
-            align="center"
-            rowsPerPage={pageSize}
-            // total={state.users.length}
-          />
         </Table>
       )}
     </>

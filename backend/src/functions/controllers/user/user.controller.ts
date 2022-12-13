@@ -5,7 +5,6 @@ import { context } from "../../../firestore";
 // internal imports
 // types
 import { IUser } from "../../../firestore/utilities/interfaces/user";
-import { paginate } from "../../handlers/pagination";
 import { IUpdateUser } from "../../model/user";
 // schema validation
 import { userUpdateSchema } from "../../schema/user";
@@ -22,37 +21,31 @@ import {
  * @param {Response} response
  */
 export const getUsers = async (
-  request: IRequest<never, { page_size?: string; page?: string }, never>,
+  request: IRequest<never, { page_size: string; page: string }, never>,
   response: IResponse<
     | ISuccessResponse<{
-        total: number;
-        page: number;
-        pageSize: number;
-        pageTotal: number;
         users: IUser[];
+        size: number;
       }>
     | IErrorResponse
   >
 ) => {
   try {
     const { query } = request;
-    const usersSnapshot = (await context
+    const documents = await context.collection("users").listDocuments();
+    const total = documents.length;
+    const usersQuery = context
       .collection("users")
-      .get()) as QuerySnapshot<IUser>;
-    const total = usersSnapshot.size;
-    const page = query.page ? +query.page : 1;
-    const pageSize = query.page_size ? +query.page_size : total;
-    const pageTotal = Math.round(total / pageSize);
+      .orderBy("id")
+      .startAfter((Number(query.page) - 1) * Number(query.page_size))
+      .limit(Number(query.page_size));
 
-    const users = paginate(
-      usersSnapshot.docs.map((doc) => doc.data()),
-      pageSize,
-      page
-    );
+    const queryResponse = (await usersQuery.get()) as QuerySnapshot<IUser>;
+    const users = queryResponse.docs.map((document) => document.data());
 
     response.status(200).json({
       success: true,
-      data: { total, page, pageSize, pageTotal, users },
+      data: { users, size: total },
     });
   } catch (error: any) {
     console.error(error);

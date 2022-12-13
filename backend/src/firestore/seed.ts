@@ -12,7 +12,7 @@ const main = async () => {
 
     console.info("..... Inserting Seed Data .....");
     for (const user of users) {
-      await context.collection("users").doc(user.id).create(user);
+      await context.collection("users").doc(String(user.id)).create(user);
     }
     console.info("..... Seed Data Inserted .....");
   } catch (error: any) {
