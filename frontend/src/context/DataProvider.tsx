@@ -1,16 +1,13 @@
 // external imports
 import {
   FunctionComponent,
-  ReactNode,
-  useEffect,
-  useReducer
+  ReactNode, useReducer
 } from "react";
 
 // internal imports
-import { DataContext } from "./DataContext";
 import { INITIAL_STATE } from "../models/state";
 import { userReducer } from "../reducers/userReducer";
-import { getUsersHandler } from "../handlers/userRequest";
+import { DataContext } from "./DataContext";
 
 interface ComponentProps {
   children: ReactNode;
@@ -20,10 +17,6 @@ export const DataProvider: FunctionComponent<ComponentProps> = ({
   children,
 }) => {
   const [state, dispatch] = useReducer(userReducer, INITIAL_STATE);
-
-  useEffect(() => {
-    getUsersHandler(dispatch, state.pagination);
-  }, []);
 
   return (
     <DataContext.Provider

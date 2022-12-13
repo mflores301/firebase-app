@@ -109,6 +109,8 @@ const UsersTable = () => {
         total={state.pagination.size}
         css={{ mb: "$5" }}
         onChange={handleChangePagination}
+        page={state.pagination.page}
+        initialPage={1}
       />
       {
       state.loading && (
